@@ -3,25 +3,28 @@ import math  #used throughout the program
 import random #Used in multiple places, most prominently when generating a random key matrix
 from random import randint #Used in multiple places, most prominently when generating a random key matrix
 import base64
-from browser import alert
-
-def userChoice():
-    userAction = input("1. Encrypting\n2. Decrypting\nAre you encrypting or decrypting?\n")
-    
-    while True:
-        if userAction not in ["1", "encrypting", "encryption", "2", "decrypting", "decryption"]:
-            userAction = input('I don\'t understand what you mean by '+userAction+'. Please resubmit.')
-        else:
-            break
-
-    if userAction.lower() in ["1", "encrypting", "encryption"]: encryptMessage()
-
-    elif userAction.lower() in ["2", "decrypting", "decryption"]: decryptMessage()
-
+from browser import alert, document
         
+def initialInput(self):
+    document['initialSect'].style.display = 'block'
+    document['encodedResultSect'].style.display = 'none'
+    document['decodedResultSect'].style.display = 'none'
+
+def encryptInput(self):
+    global userInput
+    document['initialSect'].style.display = 'none'
+    document['encryptSect'].style.display = 'block'
+
+    def encryptInputFinal(self):
+        global userInput
+        userInput = list(document['encryptInput'].value)
+        encryptMessage()
+    document['encryptSubmit'].bind('click',encryptInputFinal)
+
 def encryptMessage(): #handles the encryption process of a message from the user
-    userInput = list(input("Please input a message to be encoded: ")) #Splitting the input into a list so that each individual character can be encrypted
-    
+    global userInput
+
+
     for i in range(len(userInput)): #For all the characters entered in the input
         userInput[i] = ord(userInput[i]) #Convert the value of the current character into the unicode representation of that character.
 
@@ -81,12 +84,29 @@ def encryptMessage(): #handles the encryption process of a message from the user
     encodedMatrix = str(encodedMatrix).strip("[").strip("]")
     finalCode = encodedMatrix.encode('utf-8')
     finalCode = str(base64.b64encode(finalCode)).strip('b').strip('\'')
-    print("Message seed:", finalCode)
-    useagain()
+
+    document['encryptSect'].style.display = 'none'
+    document['messageSeedResult'].value = finalCode
+    document['encodedResultSect'].style.display = 'block'
+
+    document['useAgainButtonOne'].bind('click',initialInput)
+
+
+def decryptInput(self):
+    global messageSeed
+
+    document['initialSect'].style.display = 'none'
+    document['decryptSect'].style.display = 'block'
+
+    def decryptInputFinal(self):
+        global messageSeed
+        messageSeed = document['decryptInput'].value
+        decryptMessage()
+    document['decryptSubmit'].bind('click',decryptInputFinal)
 
 def decryptMessage(): #Handles the decryption process
-    
-    messageSeed = input('Place seed to be decoded: ') #Grabbing the base64 seed from the user
+    global messageSeed
+
     encryptedList = str(base64.b64decode(messageSeed.encode('utf-8'))).strip('b').strip('\'').split(", ") #Decoding the message, converting it to a string, and turning it into a list
     encodedMatrixTemp = []
     keyMatrixTemp = []
@@ -142,16 +162,13 @@ def decryptMessage(): #Handles the decryption process
             throwawayArray.append(chr(floattoint))
             finalstr = ''.join(throwawayArray)
     
-    print("Decoded message:", finalstr)
-    useagain()
+    #print("Decoded message:", finalstr)
+    #useagain()
 
+    document['decryptSect'].style.display = 'none'
+    document['decodedMessageResult'].value = finalstr
+    document['decodedResultSect'].style.display = 'block'
+    document['useAgainButtonTwo'].bind('click',initialInput)
 
-#This function handles repeated user usage after they encrypt/decrypt at least once
-def useagain():
-    useagain = input("\nWould you like to do encrypt/decrypt another message? Y/N\n\n")
-    if useagain.lower() in ["y","yes"]: userChoice()
-    elif useagain.lower() in ["n","no"]:
-        print("Thanks for using!")
-
-
-userChoice()
+document['encryptChoice'].bind('click',encryptInput)
+document['decryptChoice'].bind('click',decryptInput)
