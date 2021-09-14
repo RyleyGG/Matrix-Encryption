@@ -1,0 +1,66 @@
+#initialSect
+{
+    display: block;
+}
+
+#encryptChoice
+{
+    float: left;
+}
+
+#decryptChoice
+{
+    float: right;
+}
+
+#encryptSect
+{
+    display: none;
+}
+
+#decryptSect
+{
+    display: none;
+}
+
+#encodedResultSect
+{
+    display: none;
+}
+
+#decodedResultSect
+{
+    display: none;
+}
+
+#messageSeedResult, #decodedMessageResult
+{
+    width: 15vw;
+    height: auto;
+}
+
+div
+{
+    position: absolute;
+    left: 45vw;
+    top: 45vh;
+}
+
+p
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#copyText, .useAgainBtn
+{
+    margin-top: 5px;
+}
+
+.useAgainBtn
+{
+    float: right;
+}

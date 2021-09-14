@@ -1,33 +1,9 @@
 <html>
 <head>
     <title> Matrix Encryption</title>
-    <style>
-        #initialSect
-        {
-            display: block;
-        }
 
-        #encryptSect
-        {
-            display: none;
-        }
-
-        #decryptSect
-        {
-            display: none;
-        }
-
-        #encodedResultSect
-        {
-            display: none;
-        }
-
-        #decodedResultSect
-        {
-            display: none;
-        }
-    </style>
-
+    <link rel="stylesheet" href="main-style.css">
+    
     <script type="text/javascript" src="brython.js"></script>
     <script type="text/javascript" src="brython_modules.js"></script>
     <script type="text/javascript" src="brython_stdlib.js"></script>
@@ -35,7 +11,6 @@
 </head>
 
 <body onload="brython()">
-
     <div id = 'initialSect'>
         <p id = 'actionText'> What action would you like to take?</p>
         <button id = 'encryptChoice'>Encrypt</button>
@@ -43,30 +18,30 @@
     </div>
 
     <div id = 'encryptSect'>
-        <p id = 'encryptText'>Input your message:</p>
+        <p id = 'encryptText'>Input your message</p>
         <input id = 'encryptInput'>
         <button id = 'encryptSubmit'>Submit</button>
     </div>
 
     <div id = 'decryptSect'>
-        <p id = 'decryptText'>Input the encoded seed:</p>
+        <p id = 'decryptText'>Input the encoded seed</p>
         <input id = 'decryptInput'>
         <button id = 'decryptSubmit'>Submit</button>
     </div>
 
     <div id = 'encodedResultSect'>
-        <p id = 'messageSeedText'>Message Seed:</p>
+        <p id = 'messageSeedText'>Message Seed</p>
         <textarea readonly id = 'messageSeedResult'></textarea><br>
         <button onclick = 'copyText()' id = 'copyText'>Copy to clipboard</p>
-        <button id = 'useAgainButtonOne'>Run again</button>
+        <button id = 'useAgainButtonOne' class = 'useAgainBtn'>Run again</button>
     </div>
 
     <div id = 'decodedResultSect'>
-        <p id = 'decodedMessageText'>Decoded Message:</p>
+        <p id = 'decodedMessageText'>Decoded Message</p>
         <textarea readonly id = 'decodedMessageResult'></textarea><br>
-        <button id = 'useAgainButtonTwo'>Run again</button>
+        <button id = 'useAgainButtonTwo' class = 'useAgainBtn'>Run again</button>
     </div>
-
+    
     <script type = 'text/javascript'>
         function copyText()
         {
