@@ -4,26 +4,24 @@ import random #Used in multiple places, most prominently when generating a rando
 from random import randint #Used in multiple places, most prominently when generating a random key matrix
 import base64
 from browser import alert, document
-        
-def initialInput(self):
+
+#resets input form back to initial encrypt/decrypt options
+def initialInput(ev):
     document['initialSect'].style.display = 'block'
     document['encodedResultSect'].style.display = 'none'
     document['decodedResultSect'].style.display = 'none'
 
-def encryptInput(self):
-    global userInput
+#executes when user chooses encryption option
+def encryptInput(ev):
     document['initialSect'].style.display = 'none'
     document['encryptSect'].style.display = 'block'
 
-    def encryptInputFinal(self):
-        global userInput
+    def encryptInputFinal(ev):
         userInput = list(document['encryptInput'].value)
-        encryptMessage()
+        encryptMessage(userInput)
     document['encryptSubmit'].bind('click',encryptInputFinal)
 
-def encryptMessage(): #handles the encryption process of a message from the user
-    global userInput
-
+def encryptMessage(userInput): #handles the encryption process of a message from the user
 
     for i in range(len(userInput)): #For all the characters entered in the input
         userInput[i] = ord(userInput[i]) #Convert the value of the current character into the unicode representation of that character.
@@ -40,14 +38,14 @@ def encryptMessage(): #handles the encryption process of a message from the user
     originalMessage = [],[],[]
     userInputSplitVal = (len(userInput)-1)/3
     for i in range(len(userInput)):
-        if i <= userInputSplitVal:
+        if i <= userInputSplitVal: #Adding to first row of the matrix
             originalMessage[0].append(userInput[i])
-        elif i >= userInputSplitVal and i <= userInputSplitVal*2:
+        elif i >= userInputSplitVal and i <= userInputSplitVal*2: #Adding to second row of the matrix
             originalMessage[1].append(userInput[i])
         else:
-            originalMessage[2].append(userInput[i])
+            originalMessage[2].append(userInput[i]) #Adding to third row of the matrix
 
-    originalMessage = pymatrix.Matrix.from_list(originalMessage)
+    originalMessage = pymatrix.Matrix.from_list(originalMessage) #Generates a matrix object from the list of lists just generated
 
     #The key matrix is what's used in this case to encode the message; the inverse of the key matrix is used to decode the message
     keyMatrixSize = len(originalMessage[0]) #Sets the size of the key matrix, again based on the size of the original matrix
@@ -91,21 +89,17 @@ def encryptMessage(): #handles the encryption process of a message from the user
 
     document['useAgainButtonOne'].bind('click',initialInput)
 
-
-def decryptInput(self):
-    global messageSeed
-
+#executes when user chooses decryption option
+def decryptInput(ev):
     document['initialSect'].style.display = 'none'
     document['decryptSect'].style.display = 'block'
 
-    def decryptInputFinal(self):
-        global messageSeed
+    def decryptInputFinal(ev):
         messageSeed = document['decryptInput'].value
-        decryptMessage()
+        decryptMessage(messageSeed)
     document['decryptSubmit'].bind('click',decryptInputFinal)
 
-def decryptMessage(): #Handles the decryption process
-    global messageSeed
+def decryptMessage(messageSeed): #Handles the decryption process
 
     encryptedList = str(base64.b64decode(messageSeed.encode('utf-8'))).strip('b').strip('\'').split(", ") #Decoding the message, converting it to a string, and turning it into a list
     encodedMatrixTemp = []
