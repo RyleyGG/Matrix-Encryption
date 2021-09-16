@@ -39,11 +39,23 @@
     height: auto;
 }
 
-div
+
+.mainDisplayDiv
 {
     position: absolute;
     left: 45vw;
     top: 45vh;
+}
+
+
+#copyText, .useAgainBtn
+{
+    margin-top: 5px;
+}
+
+.useAgainBtn
+{
+    float: right;
 }
 
 p
@@ -55,12 +67,52 @@ p
     vertical-align: middle;
 }
 
-#copyText, .useAgainBtn
+.topval
 {
-    margin-top: 5px;
+    border-top: 3px solid black;
 }
 
-.useAgainBtn
+.bottomval
 {
-    float: right;
+    border-bottom: 3px solid black;
+}
+
+.leftval
+{
+    border-left: 3px solid black;
+}
+
+.rightval
+{
+    border-right: 3px solid black;
+}
+
+#firstMatrixDisplay
+{
+    position: absolute;
+    top: 85vh;
+    display: none;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#secondMatrixDisplay
+{
+    position: absolute;
+    display: none;
+    left: 50vw;
+    top: 85vh;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#thirdMatrixDisplay
+{
+    position: absolute;
+    top: 85vh;
+    right: 0vw;
+    display: none;
+    text-align: center;
+    vertical-align: middle;
 }

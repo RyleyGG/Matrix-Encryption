@@ -11,37 +11,58 @@
 </head>
 
 <body onload="brython()">
-    <div id = 'initialSect'>
+    
+    <!-- main display / output -->
+    <div id = 'initialSect' class = 'mainDisplayDiv'>
         <p id = 'actionText'> What action would you like to take?</p>
         <button id = 'encryptChoice'>Encrypt</button>
         <button id = 'decryptChoice'>Decrypt</button>
     </div>
 
-    <div id = 'encryptSect'>
+    <div id = 'encryptSect' class = 'mainDisplayDiv'>
         <p id = 'encryptText'>Input your message</p>
         <input id = 'encryptInput'>
         <button id = 'encryptSubmit'>Submit</button>
     </div>
 
-    <div id = 'decryptSect'>
+    <div id = 'decryptSect' class = 'mainDisplayDiv'>
         <p id = 'decryptText'>Input the encoded seed</p>
         <input id = 'decryptInput'>
         <button id = 'decryptSubmit'>Submit</button>
     </div>
 
-    <div id = 'encodedResultSect'>
+    <div id = 'encodedResultSect' class = 'mainDisplayDiv'>
         <p id = 'messageSeedText'>Message Seed</p>
         <textarea readonly id = 'messageSeedResult'></textarea><br>
         <button onclick = 'copyText()' id = 'copyText'>Copy to clipboard</p>
         <button id = 'useAgainButtonOne' class = 'useAgainBtn'>Run again</button>
     </div>
 
-    <div id = 'decodedResultSect'>
+    <div id = 'decodedResultSect' class = 'mainDisplayDiv'>
         <p id = 'decodedMessageText'>Decoded Message</p>
         <textarea readonly id = 'decodedMessageResult'></textarea><br>
         <button id = 'useAgainButtonTwo' class = 'useAgainBtn'>Run again</button>
     </div>
     
+    <!-- matrix / table displays -->
+    <div id = 'firstMatrixDisplay'>
+        <p id = 'firstmatrixtext'></p>
+        <table id = 'firstMatrix'>
+        </table>
+    </div>
+
+    <div id = 'secondMatrixDisplay'>
+        <p id = 'secondmatrixtext'></p>
+        <table id = 'secondMatrix'>
+        </table>
+    </div>
+    
+    <div id = 'thirdMatrixDisplay'>
+        <p id = 'thirdmatrixtext'></p>
+        <table id = 'thirdMatrix'>
+        </table>
+    </div>
+
     <script type = 'text/javascript'>
         function copyText()
         {

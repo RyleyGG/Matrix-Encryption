@@ -5,11 +5,39 @@ from random import randint #Used in multiple places, most prominently when gener
 import base64
 from browser import alert, document
 
+
+def updateTable(tableObj, matrix, matrixLabel, matrixlabelid):
+    tableHtml = []
+    for x in range(len(matrix)): #for each row in the matrix
+        rowHtml = '<tr>'
+        for y in range(len(matrix[0])): #for each column
+            if x == 0 and y == 0:
+                rowHtml += "<td class = 'topval leftval'>" + str(matrix[x][y]) + "</td>"
+            elif x == len(matrix)-1 and y == 0:
+                rowHtml += "<td class = 'bottomval leftval'>" + str(matrix[x][y]) + "</td>"
+            elif x == 0 and y == len(matrix[0])-1:
+                rowHtml += "<td class = 'topval rightval'>" + str(matrix[x][y]) + "</td>"
+            elif x == len(matrix)-1 and y == len(matrix[0])-1:
+                rowHtml += "<td class = 'bottomval rightval'>" + str(matrix[x][y]) + "</td>"
+            elif y == 0:
+                rowHtml += "<td class = 'leftval'>" + str(matrix[x][y]) + "</td>"
+            elif y == len(matrix[0])-1:
+                rowHtml += "<td class = 'rightval'>" + str(matrix[x][y]) + "</td>"
+            else:
+                rowHtml += "<td>" + str(matrix[x][y]) + "</td>"
+        rowHtml += "</tr>"
+        tableHtml.append(rowHtml)
+    tableObj.html = ''.join(tableHtml)
+    document[matrixlabelid].html = matrixLabel
+
 #resets input form back to initial encrypt/decrypt options
 def initialInput(ev):
     document['initialSect'].style.display = 'block'
     document['encodedResultSect'].style.display = 'none'
     document['decodedResultSect'].style.display = 'none'
+    document['firstMatrixDisplay'].style.display = 'none'
+    document['secondMatrixDisplay'].style.display = 'none'
+    document['thirdMatrixDisplay'].style.display = 'none'
 
 #executes when user chooses encryption option
 def encryptInput(ev):
@@ -45,6 +73,7 @@ def encryptMessage(userInput): #handles the encryption process of a message from
         else:
             originalMessage[2].append(userInput[i]) #Adding to third row of the matrix
 
+    updateTable(document['firstMatrix'], originalMessage, 'Original Message', 'firstmatrixtext')
     originalMessage = pymatrix.Matrix.from_list(originalMessage) #Generates a matrix object from the list of lists just generated
 
     #The key matrix is what's used in this case to encode the message; the inverse of the key matrix is used to decode the message
@@ -58,19 +87,29 @@ def encryptMessage(userInput): #handles the encryption process of a message from
 
     encodedMatrixTemp = originalMessage * keyMatrix #Holds the pymatrix object matrix representation of the dot product between the two matrices
     encodedMatrix = []
-
+    encodedMatrixForDisplay = []
     #pymatrix doesn't allow .tolist() functionality, so its converted to a list manually here
     for i in range(3):
+        encodedMatrixForDisplay.append([])
         for x in range(keyMatrixSize):
+            encodedMatrixForDisplay[i].append(encodedMatrixTemp[i][x])
             encodedMatrix.append(encodedMatrixTemp[i][x])
 
+    updateTable(document['thirdMatrix'], encodedMatrixForDisplay, 'Encoded', 'thirdmatrixtext')
+
     keyMatrixTemp = []
+    keyMatrixForDisplay = []
     for i in range(keyMatrixSize):
+        keyMatrixForDisplay.append([])
         for x in range(keyMatrixSize):
+            keyMatrixForDisplay[i].append(keyMatrix[i][x])
             keyMatrixTemp.append(keyMatrix[i][x])
 
+    updateTable(document['secondMatrix'], keyMatrixForDisplay, 'Key', 'secondmatrixtext')
     keyMatrix = keyMatrixTemp
     arrayCount = 0
+
+    
 
     for x in range(len(keyMatrix)): #For however many values are in the keyMatrix, randomly insert values into the encoded matrix. 
         encodedMatrix.insert(randint(0, len(encodedMatrix)), -2) #The -2 here is replaced in the following for loop. It basically represents a placeholder value that will eventually get replaced with the values from the key matrix
@@ -79,13 +118,18 @@ def encryptMessage(userInput): #handles the encryption process of a message from
         if encodedMatrix[x] == -2: #If the value at a certain index was randomly placed there by the above for loop...
             encodedMatrix[x] = keyMatrix[arrayCount] #Then replace that value with a value from the keymatrix.
             arrayCount+=1
+
     encodedMatrix = str(encodedMatrix).strip("[").strip("]")
     finalCode = encodedMatrix.encode('utf-8')
     finalCode = str(base64.b64encode(finalCode)).strip('b').strip('\'')
 
+    #once everything has been calculated, set up display
     document['encryptSect'].style.display = 'none'
     document['messageSeedResult'].value = finalCode
     document['encodedResultSect'].style.display = 'block'
+    document['firstMatrixDisplay'].style.display = 'inline-block'
+    document['secondMatrixDisplay'].style.display = 'inline-block'
+    document['thirdMatrixDisplay'].style.display = 'inline-block'
 
     document['useAgainButtonOne'].bind('click',initialInput)
 
@@ -123,6 +167,7 @@ def decryptMessage(messageSeed): #Handles the decryption process
         else:
             encodedMatrix[2].append(encodedMatrixTemp[i])
 
+    updateTable(document['firstMatrix'], encodedMatrix, 'Encoded', 'firstmatrixtext')
     encodedMatrix = pymatrix.Matrix.from_list(encodedMatrix)
 
     #Create the keymatrix
@@ -136,13 +181,25 @@ def decryptMessage(messageSeed): #Handles the decryption process
             y+=1
 
     keyMatrixInverse = keyMatrix.inv()
-    
+
+    keyMatrixInverseForDisplay = []
+    for i in range(keyMatrixSize):
+        keyMatrixInverseForDisplay.append([])
+        for x in range(keyMatrixSize):
+            keyMatrixInverseForDisplay[i].append(keyMatrix[i][x])
+    updateTable(document['secondMatrix'], keyMatrixInverseForDisplay, 'Inverse Key', 'secondmatrixtext')
+
     decodedMatrix = encodedMatrix * keyMatrixInverse
     decodedList = []
+    decodedMatrixForDisplay = []
     for i in range(3):
+        decodedMatrixForDisplay.append([])
         for x in range(len(decodedMatrix[0])):
+            decodedMatrixForDisplay[i].append(round(decodedMatrix[i][x]))
             decodedList.append(decodedMatrix[i][x])
-    
+
+    updateTable(document['thirdMatrix'], decodedMatrixForDisplay, 'Decoded', 'thirdmatrixtext')
+
     throwawayArray=[]
     
     for x in range(len(decodedList)):
@@ -155,13 +212,14 @@ def decryptMessage(messageSeed): #Handles the decryption process
         else:
             throwawayArray.append(chr(floattoint))
             finalstr = ''.join(throwawayArray)
-    
-    #print("Decoded message:", finalstr)
-    #useagain()
 
     document['decryptSect'].style.display = 'none'
     document['decodedMessageResult'].value = finalstr
     document['decodedResultSect'].style.display = 'block'
+    document['firstMatrixDisplay'].style.display = 'inline-block'
+    document['secondMatrixDisplay'].style.display = 'inline-block'
+    document['thirdMatrixDisplay'].style.display = 'inline-block'
+
     document['useAgainButtonTwo'].bind('click',initialInput)
 
 document['encryptChoice'].bind('click',encryptInput)
