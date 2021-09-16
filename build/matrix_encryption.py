@@ -49,13 +49,15 @@ def encryptInput(ev):
         encryptMessage(userInput)
     document['encryptSubmit'].bind('click',encryptInputFinal)
 
-def encryptMessage(userInput): #handles the encryption process of a message from the user
+#handles the encryption process of a message from the user
+def encryptMessage(userInput): 
 
-    for i in range(len(userInput)): #For all the characters entered in the input
-        userInput[i] = ord(userInput[i]) #Convert the value of the current character into the unicode representation of that character.
+    for i in range(len(userInput)): #For all characters entered in input
+        userInput[i] = ord(userInput[i]) #Convert the value of the current character into its unicode representation
 
 
-    for i in range(len(userInput)+3): #this for loop formats the input list such that it will create a proper matrix, filling in the leftover spaces with -1.
+    #formats the input list such that it will create a proper matrix, filling in the leftover spaces with -1.
+    for i in range(len(userInput)+3):
         if i >= len(userInput):
             if len(userInput) % 3 == 0:
                 break
@@ -76,7 +78,7 @@ def encryptMessage(userInput): #handles the encryption process of a message from
     updateTable(document['firstMatrix'], originalMessage, 'Original Message', 'firstmatrixtext')
     originalMessage = pymatrix.Matrix.from_list(originalMessage) #Generates a matrix object from the list of lists just generated
 
-    #The key matrix is what's used in this case to encode the message; the inverse of the key matrix is used to decode the message
+    #The key matrix is what's used to encode the message; the inverse of the key matrix is used to decode the message
     keyMatrixSize = len(originalMessage[0]) #Sets the size of the key matrix, again based on the size of the original matrix
 
     #pymatrix doesn't have a built in method of properly filling with random values, so its done manually here after creating the keymatrix itself
@@ -88,15 +90,8 @@ def encryptMessage(userInput): #handles the encryption process of a message from
     encodedMatrixTemp = originalMessage * keyMatrix #Holds the pymatrix object matrix representation of the dot product between the two matrices
     encodedMatrix = []
     encodedMatrixForDisplay = []
-    #pymatrix doesn't allow .tolist() functionality, so its converted to a list manually here
-    for i in range(3):
-        encodedMatrixForDisplay.append([])
-        for x in range(keyMatrixSize):
-            encodedMatrixForDisplay[i].append(encodedMatrixTemp[i][x])
-            encodedMatrix.append(encodedMatrixTemp[i][x])
 
-    updateTable(document['thirdMatrix'], encodedMatrixForDisplay, 'Encoded', 'thirdmatrixtext')
-
+    #pymatrix doesn't allow .tolist() functionality, so key matrix & the encoded matrix are converted to a list manually here
     keyMatrixTemp = []
     keyMatrixForDisplay = []
     for i in range(keyMatrixSize):
@@ -107,6 +102,16 @@ def encryptMessage(userInput): #handles the encryption process of a message from
 
     updateTable(document['secondMatrix'], keyMatrixForDisplay, 'Key', 'secondmatrixtext')
     keyMatrix = keyMatrixTemp
+    
+    for i in range(3):
+        encodedMatrixForDisplay.append([])
+        for x in range(keyMatrixSize):
+            encodedMatrixForDisplay[i].append(encodedMatrixTemp[i][x])
+            encodedMatrix.append(encodedMatrixTemp[i][x])
+
+    updateTable(document['thirdMatrix'], encodedMatrixForDisplay, 'Encoded', 'thirdmatrixtext')
+
+
     arrayCount = 0
 
     

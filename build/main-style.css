@@ -1,3 +1,4 @@
+/* relating to the main div/display */
 #initialSect
 {
     display: block;
@@ -13,22 +14,7 @@
     float: right;
 }
 
-#encryptSect
-{
-    display: none;
-}
-
-#decryptSect
-{
-    display: none;
-}
-
-#encodedResultSect
-{
-    display: none;
-}
-
-#decodedResultSect
+#encryptSect, #decryptSect, #encodedResultSect, #decodedResultSect
 {
     display: none;
 }
@@ -39,14 +25,12 @@
     height: auto;
 }
 
-
 .mainDisplayDiv
 {
     position: absolute;
     left: 45vw;
     top: 45vh;
 }
-
 
 #copyText, .useAgainBtn
 {
@@ -58,15 +42,8 @@
     float: right;
 }
 
-p
-{
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-}
 
+/* relating to the matrix display */
 .topval
 {
     border-top: 3px solid black;
@@ -113,6 +90,16 @@ p
     top: 85vh;
     right: 0vw;
     display: none;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* general formatting */
+p
+{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
     text-align: center;
     vertical-align: middle;
 }
